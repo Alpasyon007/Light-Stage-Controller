@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/listpi.dir/src/listpi.cpp.o -o listpi  -lpigpio 
