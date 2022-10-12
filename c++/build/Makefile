@@ -142,6 +142,33 @@ listpi/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/listpi.dir/build.make CMakeFiles/listpi.dir/build
 .PHONY : listpi/fast
 
+src/StepperMotorController.o: src/StepperMotorController.cpp.o
+
+.PHONY : src/StepperMotorController.o
+
+# target to build an object file
+src/StepperMotorController.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/listpi.dir/build.make CMakeFiles/listpi.dir/src/StepperMotorController.cpp.o
+.PHONY : src/StepperMotorController.cpp.o
+
+src/StepperMotorController.i: src/StepperMotorController.cpp.i
+
+.PHONY : src/StepperMotorController.i
+
+# target to preprocess a source file
+src/StepperMotorController.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/listpi.dir/build.make CMakeFiles/listpi.dir/src/StepperMotorController.cpp.i
+.PHONY : src/StepperMotorController.cpp.i
+
+src/StepperMotorController.s: src/StepperMotorController.cpp.s
+
+.PHONY : src/StepperMotorController.s
+
+# target to generate assembly for a file
+src/StepperMotorController.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/listpi.dir/build.make CMakeFiles/listpi.dir/src/StepperMotorController.cpp.s
+.PHONY : src/StepperMotorController.cpp.s
+
 src/listpi.o: src/listpi.cpp.o
 
 .PHONY : src/listpi.o
@@ -178,6 +205,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... listpi"
+	@echo "... src/StepperMotorController.o"
+	@echo "... src/StepperMotorController.i"
+	@echo "... src/StepperMotorController.s"
 	@echo "... src/listpi.o"
 	@echo "... src/listpi.i"
 	@echo "... src/listpi.s"

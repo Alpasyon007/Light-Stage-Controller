@@ -13,6 +13,13 @@ set(SOURCE_DIR src)
 # Set the project name
 project(listpi)
 
-add_executable(listpi ${SOURCE_DIR}/listpi.cpp)
+add_executable(
+	listpi 
+	${SOURCE_DIR}/listpi.cpp
+	${SOURCE_DIR}/StepperMotorController.cpp
+	${SOURCE_DIR}/StepperMotorController.h
+)
+
+target_include_directories(listpi PRIVATE ${SOURCE_DIR})
 
 target_link_libraries(listpi pigpio)

@@ -3,19 +3,23 @@
 
 #include <iostream>
 
+#include "StepperMotorController.h"
+
 int main() {
 	if (gpioInitialise() < 0) return -1;
 	std::cout << "Initalised GPIO" << std::endl;
 
-	int servo = 24;
+	StepperMotorController stepperMotor(16, 21, 0.003f);
+	stepperMotor.StepForward(200); // 360 Degrees
 
-	std::cout << "Sending servos pulses to GPIO" << std::endl;
-	while(true) {
-		gpioServo(servo, 500);
-		time_sleep(0.1);
+	time_sleep(1);
+
+	for(int i = 0; i < 10; i++) {
+		stepperMotor.StepForward(20);
+		time_sleep(1);
 	}
+	
 
-	gpioServo(servo, 0);
-
+	gpioWrite(21, 0);
 	gpioTerminate();
 }

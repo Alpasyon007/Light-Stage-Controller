@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/listpi.dir/src/StepperMotorController.cpp.o"
   "CMakeFiles/listpi.dir/src/listpi.cpp.o"
   "listpi"
   "listpi.pdb"
