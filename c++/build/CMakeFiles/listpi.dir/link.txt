@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/listpi.dir/src/listpi.cpp.o CMakeFiles/listpi.dir/src/StepperMotorController.cpp.o -o listpi  -lpigpio 
