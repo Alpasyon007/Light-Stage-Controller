@@ -1,6 +1,6 @@
 [submodule "libgphoto2"]
-	path = rpi-source/c++/libgphoto2/
+	path = rpi-source/c++/libgphoto2
 	url = https://github.com/gphoto/libgphoto2.git
 [submodule "gphoto2pp"]
-	path = rpi-source/c++/gphoto2pp/
+	path = rpi-source/c++/gphoto2pp
 	url = https://github.com/maldworth/gphoto2pp.git
