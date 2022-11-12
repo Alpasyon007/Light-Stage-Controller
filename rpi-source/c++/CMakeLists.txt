@@ -24,4 +24,4 @@ add_executable(
 
 target_include_directories(listpi PRIVATE ${SOURCE_DIR})
 
-target_link_libraries(listpi PUBLIC pigpio gphoto2)
+target_link_libraries(listpi PUBLIC pigpio gphoto2_port gphoto2 gphoto2pp)
