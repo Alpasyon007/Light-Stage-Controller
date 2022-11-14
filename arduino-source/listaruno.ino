@@ -28,7 +28,7 @@ void loop() {
 
     pixels.fill(pixels.Color(0, 0, 0));
     if(incomingByte != -1) {
-      pixels.setPixelColor(incomingByte, pixels.Color(150, 150, 150));
+      pixels.setPixelColor(incomingByte, pixels.Color(255, 255, 255));
     }
     pixels.show();
   }
