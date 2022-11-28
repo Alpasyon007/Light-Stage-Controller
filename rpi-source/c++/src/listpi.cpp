@@ -52,6 +52,9 @@ void CaptureImage(gphoto2pp::CameraWrapper& cameraWrapper) {
 	} catch (gphoto2pp::exceptions::gphoto2_exception& e) {
 		std::cout << "GPhoto Exception Code: " << e.getResultCode() << std::endl;
 		std::cout << "Exception Message: " << e.what() << std::endl;
+
+		// Try Again
+		CaptureImage(cameraWrapper);
 	}
 }
 
@@ -73,22 +76,30 @@ int main() {
 	stepperMotor.StepForward(200); // 360 Degrees
 	time_sleep(1);
 	
-	for(int i = 0; i < 10; i++) {
+
+	auto start = std::chrono::high_resolution_clock::now();
+
+	int turns = 10;
+
+	for(int i = 0; i < turns; i++) {
 		std::cout << "Turn " << i << std::endl;
 		serial.Write(0);
 		time_sleep(1);
 
-		for(int j = 0; j < 36; j += 4) {
+		for(int j = 0; j < 144; j += 4) {
+			std::cout << "LED: " << j << std::endl;
 			std::cout << "Capture " << (j + 1)/4 << std::endl; 
-			CaptureImage(cameraWrapper);
-
 			serial.Write(j);
-			time_sleep(1);
+			CaptureImage(cameraWrapper);
 		}
 
-		stepperMotor.StepForward(20);
+		stepperMotor.StepForward(200/turns);
 		time_sleep(1);
 	}
+	auto stop = std::chrono::high_resolution_clock::now();
+
+	auto duration = std::chrono::duration_cast<std::chrono::minutes>(stop - start);
+	std::cout << duration.count() << std::endl;
 
 	gpioWrite(21, 0);
 	gpioTerminate();
