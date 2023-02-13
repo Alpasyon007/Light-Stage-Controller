@@ -45,10 +45,11 @@ void CaptureToSD(gphoto2pp::CameraWrapper& cameraWrapper, bool captureToSD) {
 
 void CaptureImage(gphoto2pp::CameraWrapper& cameraWrapper) {
 	try {
-		// std::cout << "Taking picture" << std::endl << std::endl;
+		std::cout << "Attempting Capture" << std::endl << std::endl;
 		// Clean and quick capture and save to disk, but this assumes you are taking images, and in jpeg foramt. Adjust type and extension as appropriate.
 		gphoto2pp::CameraFileWrapper cameraFileWrapper;
 		gphoto2pp::helper::capture(cameraWrapper, cameraFileWrapper, false);
+		std::cout << "Captured" << std::endl << std::endl;
 	} catch (gphoto2pp::exceptions::gphoto2_exception& e) {
 		std::cout << "GPhoto Exception Code: " << e.getResultCode() << std::endl;
 		std::cout << "Exception Message: " << e.what() << std::endl;
@@ -87,8 +88,7 @@ int main() {
 		time_sleep(1);
 
 		for(int j = 0; j < 144; j += 4) {
-			std::cout << "LED: " << j << std::endl;
-			std::cout << "Capture " << (j + 1)/4 << std::endl; 
+			std::cout << "LED: " << j << "," << " Capture " << (j + 1)/4 <<  std::endl;
 			serial.Write(j);
 			CaptureImage(cameraWrapper);
 		}

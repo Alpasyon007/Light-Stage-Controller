@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <limits>
 
-#define MOTOR_STEP_DELAY 0.002f
+#define MOTOR_STEP_DELAY 0.001f
 
 StepperMotorController::StepperMotorController(int stepPin, int dirPin, float stepDelay) : 
 m_stepPinGPIO(stepPin), m_dirPinGPIO(dirPin), m_stepDelay(std::clamp(stepDelay, 0.003f, std::numeric_limits<float>::max())) {
