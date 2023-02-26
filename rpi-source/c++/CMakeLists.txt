@@ -20,6 +20,10 @@ add_executable(
 	${SOURCE_DIR}/StepperMotorController.h
 	${SOURCE_DIR}/Serial.cpp
 	${SOURCE_DIR}/Serial.h
+	${SOURCE_DIR}/CaptureUtility.h
+	${SOURCE_DIR}/CaptureUtility.cpp
+	${SOURCE_DIR}/LEDController.h
+	${SOURCE_DIR}/LEDController.cpp
 )
 
 target_include_directories(listpi PRIVATE ${SOURCE_DIR})

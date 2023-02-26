@@ -1,0 +1,1 @@
+arduino --upload /home/listpi/Light-Stage-Controller/arduino-source/listaruno/listaruno.ino --port /dev/ttyUSB0

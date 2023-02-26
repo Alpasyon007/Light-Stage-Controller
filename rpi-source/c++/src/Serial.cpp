@@ -13,5 +13,5 @@ int Serial::Write(int input) {
 
 int Serial::Write(std::string input) {
     char *buf = input.data();
-    return serWrite(m_handle, buf, sizeof(buf));
+    return serWrite(m_handle, buf, sizeof(input));
 }
