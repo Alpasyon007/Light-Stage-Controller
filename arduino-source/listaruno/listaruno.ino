@@ -40,6 +40,7 @@ void loop() {
 
 		switch (incomingByte) {
 			case LED_MODE::SINGLE: {
+					WaitForSerial();
 					incomingByte = Serial.read();
 					Serial.print("LED: ");
 					Serial.println(incomingByte);
@@ -64,6 +65,11 @@ void loop() {
 					pixels.show();
 				}; break;
 			case LED_MODE::ALL:
+					WaitForSerial();
+					incomingByte = Serial.read();
+					Serial.print("LED: ");
+					Serial.println(incomingByte);
+					pixels.fill(pixels.Color(10, 10, 10));
 				break;
 			default:
 				break;

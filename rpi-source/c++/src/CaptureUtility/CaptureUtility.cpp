@@ -20,19 +20,22 @@ void CaptureUtility::CaptureToSD(bool captureToSD) {
 	}
 }
 
-void CaptureUtility::CaptureImage() {
+void CaptureUtility::CaptureImage(int i) {
 	try {
 		std::cout << "Attempting Capture" << std::endl << std::endl;
 		// Clean and quick capture and save to disk, but this assumes you are taking images, and in jpeg foramt. Adjust type and extension as appropriate.
 		gphoto2pp::CameraFileWrapper cameraFileWrapper;
 		gphoto2pp::helper::capture(m_cameraWrapper, cameraFileWrapper, false);
+		cameraFileWrapper.detectMimeType();
+		cameraFileWrapper.adjustNameForMimeType();
+		cameraFileWrapper.save( std::to_string(i) + cameraFileWrapper.getFileName());
 		std::cout << "Captured" << std::endl << std::endl;
 	} catch (gphoto2pp::exceptions::gphoto2_exception& e) {
 		std::cout << "GPhoto Exception Code: " << e.getResultCode() << std::endl;
 		std::cout << "Exception Message: " << e.what() << std::endl;
 
 		// Try Again
-		CaptureImage();
+		CaptureImage(i);
 	}
 }
 
@@ -41,7 +44,7 @@ void CaptureUtility::TriggerCapture() {
 		std::cout << "Attempting Capture" << std::endl;
 		// Trigger camera capture
 		m_cameraWrapper.triggerCapture();
-		
+
 		// Let I/O Finish
 		std::this_thread::sleep_for(std::chrono::milliseconds(TRIGGER_DELAY));
 
