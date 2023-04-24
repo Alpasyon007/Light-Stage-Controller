@@ -3,12 +3,14 @@
 	#include <avr/power.h>
 #endif
 #define PIN 6
-#define NUMPIXELS 144
+#define NUMPIXELS 288
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 #define DELAYVAL 500
 
-int incomingByte = -1; // for incoming serial data
+int incomingByteOne = -1; // for incoming serial data
+int incomingByteTwo = -1;
+int value = -1;
 
 enum LED_MODE {
 	SINGLE = 1,
@@ -34,42 +36,45 @@ void loop() {
 
 	if (Serial.available() > 0) {
 		// read the incoming byte:
-		incomingByte = Serial.read();
+		incomingByteOne = Serial.read();
 		Serial.print("Mode: ");
-		Serial.println(incomingByte);
+		Serial.println(incomingByteOne);
 
-		switch (incomingByte) {
+		switch (incomingByteOne) {
 			case LED_MODE::SINGLE: {
 					WaitForSerial();
-					incomingByte = Serial.read();
+					incomingByteOne = Serial.read();
+					WaitForSerial();
+					incomingByteTwo = Serial.read();
+					value = (incomingByteTwo << 8) | incomingByteOne;
 					Serial.print("LED: ");
-					Serial.println(incomingByte);
+					Serial.println(value);
 					pixels.fill(pixels.Color(0, 0, 0));
-					if(incomingByte != -1) {
-						pixels.setPixelColor(incomingByte, pixels.Color(255, 255, 255));
+					if(value != -1) {
+						pixels.setPixelColor(value, pixels.Color(255, 255, 255));
 					}
 					pixels.show();
 				}; break;
 			case LED_MODE::QUAD: {
-					WaitForSerial();
-					incomingByte = Serial.read();
-					Serial.print("LED: ");
-					Serial.println(incomingByte);
-					pixels.fill(pixels.Color(0, 0, 0));
-					if(incomingByte != -1) {
-						pixels.setPixelColor(incomingByte, pixels.Color(255, 255, 255));
-						pixels.setPixelColor(incomingByte + 1, pixels.Color(255, 255, 255));
-						pixels.setPixelColor(incomingByte + 2, pixels.Color(255, 255, 255));
-						pixels.setPixelColor(incomingByte + 3, pixels.Color(255, 255, 255));
-					}
-					pixels.show();
+					// WaitForSerial();
+					// incomingByte = Serial.read();
+					// Serial.print("LED: ");
+					// Serial.println(incomingByte);
+					// pixels.fill(pixels.Color(0, 0, 0));
+					// if(incomingByte != -1) {
+					// 	pixels.setPixelColor(incomingByte, pixels.Color(255, 255, 255));
+					// 	pixels.setPixelColor(incomingByte + 1, pixels.Color(255, 255, 255));
+					// 	pixels.setPixelColor(incomingByte + 2, pixels.Color(255, 255, 255));
+					// 	pixels.setPixelColor(incomingByte + 3, pixels.Color(255, 255, 255));
+					// }
+					// pixels.show();
 				}; break;
 			case LED_MODE::ALL:
-					WaitForSerial();
-					incomingByte = Serial.read();
-					Serial.print("LED: ");
-					Serial.println(incomingByte);
-					pixels.fill(pixels.Color(10, 10, 10));
+					// WaitForSerial();
+					// incomingByte = Serial.read(2);
+					// Serial.print("LED: ");
+					// Serial.println(incomingByte);
+					// pixels.fill(pixels.Color(10, 10, 10));
 				break;
 			default:
 				break;

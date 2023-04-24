@@ -7,8 +7,13 @@ Serial::Serial(std::string sertty, unsigned baud) {
     m_handle = serOpen(sertty.data(), baud, 0);
 }
 
-int Serial::Write(int input) {
-    return serWriteByte(m_handle, input);
+int Serial::WriteByte(int input) {
+	return serWriteByte(m_handle, input);
+}
+
+void Serial::WriteWord(int input) {
+	serWriteByte(m_handle, input & 0xFF);
+	serWriteByte(m_handle, (input >> 8) & 0xFF);
 }
 
 int Serial::Write(std::string input) {

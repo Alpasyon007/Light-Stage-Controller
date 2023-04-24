@@ -2,6 +2,7 @@
 #include <pigpio.h>
 #include <signal.h>
 
+// gphoto
 #include <gphoto2/gphoto2-camera.h>
 
 // std
@@ -14,27 +15,29 @@
 #include "CaptureUtility.h"
 #include "LEDController.h"
 
-// // #define IMGUI_IMPL_OPENGL_LOADER_GLAD
-// #include "backends/imgui_impl_opengl3.cpp"
-// #include "backends/imgui_impl_glfw.cpp"
-
 // DO NOT CHANGE (AT 31V)
-#define MOTOR_MAX_STEP_DELAY_TIME 0.005f
+#define MOTOR_MAX_STEP_DELAY_TIME 0.05f
 // DO NOT CHANGE (AT 31V)
 
 #define MOTOR_STEP_PIN 16
 #define MOTOR_DIRECTION_PIN 21
-#define MOTOR_STEP_DELAY_TIME 0.005f
+#define MOTOR_STEP_DELAY_TIME 0.01f
+
+void WaitForFocus() {
+	do {
+	std::cout << '\n' << "Refocus camera for new view, Press a key to continue..." << std::endl;
+	} while (std::cin.get() != '\n');
+}
 
 void CameraCalibrationCapture(int turns /*= 10*/, LEDController& led, CaptureUtility& c, StepperMotorController& stepperMotor) {
 	std::chrono::steady_clock::time_point capture_start = std::chrono::steady_clock::now();
 	led.LightLED(LEDController::LED_MODE::ALL);
 	for(int i = 0; i < turns; i++) {
 		std::cout << "Turn " << i << std::endl;
-		time_sleep(1);
+		time_sleep(0.5f);
 		c.TriggerCapture();
+		time_sleep(5);
 		stepperMotor.StepForward(200/turns);
-		time_sleep(1);
 	}
 	std::chrono::steady_clock::time_point capture_end = std::chrono::steady_clock::now();
 	std::cout << "Camera Calibration Duration = " << std::chrono::duration_cast<std::chrono::seconds>(capture_end - capture_start).count() << "[s]" << std::endl;
@@ -43,18 +46,24 @@ void CameraCalibrationCapture(int turns /*= 10*/, LEDController& led, CaptureUti
 void SingleViewPhotometricStereoCapture(LEDController& led, CaptureUtility& c, LEDController::LED_MODE mode) {
 	std::chrono::steady_clock::time_point capture_start = std::chrono::steady_clock::now();
 
-	for(int j = 108; j < 144; j += static_cast<int>(mode)) {
-		std::cout << "LED: " << j << "," << " Capture " << (j)/static_cast<int>(mode) <<  std::endl;
+	constexpr float sleepTime = 1.1f;
+
+	auto capture = [&](int j) {
+		std::cout << "LED: " << j << "," << " Capture " << (j)/static_cast<int>(LEDController::LED_MODE::SINGLE) <<  std::endl;
 		led.LightLED(j);
+		time_sleep(0.3f);
 		c.TriggerCapture();
-		time_sleep(1);
+		time_sleep(sleepTime);
+	};
+
+	for(int j = 108; j < 143; j += static_cast<int>(LEDController::LED_MODE::SINGLE)) {
+		capture(j);
+		capture(107 + j);
 	}
 
-	for(int j = 0; j < 36; j += static_cast<int>(mode)) {
-		std::cout << "LED: " << j << "," << " Capture " << (j)/static_cast<int>(mode) <<  std::endl;
-		led.LightLED(j);
-		c.TriggerCapture();
-		time_sleep(1);
+	for(int j = 0; j < 37; j += static_cast<int>(LEDController::LED_MODE::SINGLE)) {
+		capture(j);
+		capture(251 + j);
 	}
 
 	std::chrono::steady_clock::time_point capture_end = std::chrono::steady_clock::now();
@@ -65,16 +74,14 @@ void MultiViewPhotometricStereoCapture(int turns /*= 10*/, LEDController& led, C
 	std::chrono::steady_clock::time_point capture_start = std::chrono::steady_clock::now();
 	for(int i = 0; i < turns; i++) {
 		std::cout << "Turn " << i << std::endl;
-		time_sleep(1);
+		time_sleep(2);
 
-		for(int j = 0; j < 144; j += static_cast<int>(mode)) {
-			std::cout << "LED: " << j << "," << " Capture " << (j + 1)/static_cast<int>(mode) <<  std::endl;
-			led.LightLED(j);
-			c.TriggerCapture();
-		}
-
+		SingleViewPhotometricStereoCapture(led, c, mode);
 		stepperMotor.StepForward(200/turns);
-		time_sleep(1);
+
+		// WaitForFocus();
+
+		time_sleep(2);
 	}
 	std::chrono::steady_clock::time_point capture_end = std::chrono::steady_clock::now();
 	std::cout << "Capture Session Duration = " << std::chrono::duration_cast<std::chrono::seconds>(capture_end - capture_start).count() << "[s]" << std::endl;
@@ -95,14 +102,15 @@ int main() {
 	c.CaptureToSD(true);
 
 	// Test the motor
-	// stepperMotor.StepForward(200); // 360 Degrees
+	stepperMotor.StepForward(200); // 360 Degrees
 	time_sleep(1);
 
 	// Camera Calibration Capture
-	CameraCalibrationCapture(10, led, c, stepperMotor);
+	// CameraCalibrationCapture(10, led, c, stepperMotor);
 
 	// Capture
-	SingleViewPhotometricStereoCapture(led, c, LEDController::LED_MODE::SINGLE);
+	// SingleViewPhotometricStereoCapture(led, c, LEDController::LED_MODE::SINGLE);
+	MultiViewPhotometricStereoCapture(10, led, c, stepperMotor, LEDController::LED_MODE::SINGLE);
 
 	gpioWrite(21, 0);
 	gpioTerminate();
